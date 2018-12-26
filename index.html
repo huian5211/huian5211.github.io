@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>萬花尺</title>
+    <link rel="stylesheet" type="text/css" href="spirograph.css">
+<style>
+    
+</style>
+
+</head>
+
+<body>
+    <canvas id='down'></canvas>
+    <canvas id='on'></canvas>
+    <button id='start'>開始</button>
+    <button id='outerplus'>外圓漸大</button>
+    <button id='outerminus'>外圓漸小</button>
+    <button id='innerplus'>內圓漸大</button>
+    <button id='innerminus'>內圓漸小</button>
+    <button id='dplus'>半徑漸長</button>
+    <button id='dminus'>半徑漸短</button>
+    <button id='clear'>清空</button>
+    <button id='pause'>暫停</button>
+    <script>
+    
+    //鎖定螢幕
+    (function(){window.screen.lockOrientation('portrait');})
+
+    var start = document.querySelector('#start');
+    var pause = document.querySelector('#pause');
+
+    //底層畫布
+    var canvasDown = document.querySelector('#down');
+    var widthDown = canvasDown.width = window.innerWidth;
+    var heightDown = canvasDown.height = window.innerHeight;
+    var ctxDown = canvasDown.getContext('2d');
+    //移動中心點
+    ctxDown.translate(widthDown/2, heightDown/2);
+    //填滿背景
+    ctxDown.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctxDown.fillRect(-(widthDown/2), -(heightDown/2), widthDown, heightDown);
+
+
+    //上層畫布
+    var canvasOn = document.querySelector('#on');
+    var widthOn = canvasOn.width = window.innerWidth;
+    var heightOn = canvasOn.height = window.innerHeight;
+    var ctxOn = canvasOn.getContext('2d');
+    //移動中心點
+    ctxOn.translate(widthOn/2, heightOn/2);
+    //填滿背景
+    ctxOn.fillStyle = 'rgba(0, 0, 0, 0)';
+    ctxOn.fillRect(-(widthOn/2), -(heightOn/2), widthOn, heightOn);
+
+
+    if (document.documentElement.clientHeight > document.documentElement.clientWidth) {
+        var R = Math.floor((document.documentElement.clientWidth/2)/10)*10;
+        //var r = document.documentElement.clientWidth/7*3;
+        var r = Math.floor(rand(document.documentElement.clientWidth/5, document.documentElement.clientWidth/3)/10)*10;
+        var d = 180;
+        var t = 0;
+    } else {
+        var R = Math.floor((document.documentElement.clientHeight/2)/10)*10;
+        //var r = document.documentElement.clientHeight/7*3;
+        var r = Math.floor(rand(document.documentElement.clientHeight/5, document.documentElement.clientHeight/3)/10)*10;
+        var d = r/3*2;
+        var t = 0;
+    }
+
+    //換算弧度
+    function degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+
+    //指派亂數
+    function rand(min, max) {
+        return Math.floor(Math.random() * (max-min+1)) + (min);
+    }
+
+    //內旋輪線
+    var posX = function(t) {
+        return (R-r) * Math.cos(degToRad(t)) + d * Math.cos((R-r)/r*degToRad(t));
+    }
+
+    var posY = function(t) {
+        return (R-r) * Math.sin(degToRad(t)) - d * Math.sin((R-r)/r*degToRad(t));
+    }
+    
+    ctxOn.beginPath();
+    ctxOn.lineWidth = 1;
+    ctxOn.moveTo(posX(0), posY(0));
+
+
+    //預設外圓
+    ctxDown.beginPath();
+    ctxDown.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctxDown.arc(0, 0, R, degToRad(0), degToRad(360));
+    ctxDown.stroke();      
+
+
+    //預設內圓
+    ctxDown.beginPath();
+    ctxDown.strokeStyle = 'white';
+    ctxDown.arc((R-r)*Math.cos(degToRad(t)), (R-r)*Math.sin(degToRad(t)), r, degToRad(0), degToRad(360));
+    ctxDown.stroke();
+
+
+    //預設d
+    ctxDown.beginPath();
+    ctxDown.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctxDown.moveTo((R-r)*Math.cos(degToRad(t)), (R-r)*Math.sin(degToRad(t)));
+    ctxDown.lineTo(posX(t), posY(t));
+    ctxDown.stroke();
+
+
+    //外圓變大
+    var outerplus = document.querySelector('#outerplus');
+    function outerPlus() {
+        if (R < heightDown) {
+            R = R + 5;
+        } else {
+            R = R;
+        }
+        drawCircle();
+    }
+    outerplus.addEventListener('click', outerPlus);
+
+
+    //外圓變小
+    var outerminus = document.querySelector('#outerminus');
+    function outerMinus() {
+        R = R - 5;
+        drawCircle();
+    }
+    outerminus.addEventListener('click', outerMinus);
+
+
+    //內圓變大
+    var innerplus = document.querySelector('#innerplus');
+    function innerPlus() {
+        r = r + 5;
+        drawCircle();
+    }
+    innerplus.addEventListener('click', innerPlus);
+
+
+    //內圓變小
+    var innerminus = document.querySelector('#innerminus');
+    function innerMinus() {
+        r = r - 5;
+        drawCircle();
+    }
+    innerminus.addEventListener('click', innerMinus);
+
+
+    //半徑變長
+    var dplus = document.querySelector('#dplus');
+    function dPlus() {
+        d = d + 5;
+        drawCircle();
+    }
+    dplus.addEventListener('click', dPlus);
+
+
+    //半徑變短
+    var dminus = document.querySelector('#dminus');
+    function dMinus() {
+        d = d - 5;
+        drawCircle();
+    }
+    dminus.addEventListener('click', dMinus);
+
+
+
+    //畫兩圓
+    function drawCircle() {
+
+        //內圓
+        ctxDown.fillStyle = 'rgb(0, 0, 0)';
+        ctxDown.fillRect(-(widthDown/2), -(heightDown/2), widthDown, heightDown);
+
+        ctxDown.beginPath();
+        ctxDown.strokeStyle = 'white';
+        ctxDown.arc((R-r)*Math.cos(degToRad(t)), (R-r)*Math.sin(degToRad(t)), r, degToRad(0), degToRad(360));
+        ctxDown.stroke();
+
+        ctxDown.beginPath();
+        ctxDown.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctxDown.moveTo((R-r)*Math.cos(degToRad(t)), (R-r)*Math.sin(degToRad(t)));
+        ctxDown.lineTo(posX(t), posY(t));
+        ctxDown.stroke();
+
+        //外圓
+        ctxDown.beginPath();
+        ctxDown.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctxDown.arc(0, 0, R, degToRad(0), degToRad(360));
+        ctxDown.stroke();
+
+    }
+
+    
+    
+    var req;
+    ctxOn.beginPath();
+    
+
+    function loop() {
+        
+        t++;
+
+        drawCircle();
+
+       
+        ctxOn.strokeStyle = 'rgba(255, 255, 255, 1)';
+
+        ctxOn.lineTo(posX(t), posY(t));
+        ctxOn.stroke();
+        
+        req = requestAnimationFrame(loop);
+        
+        if (posX(t) === posX(0)) {
+            cancelAnimationFrame(req);
+        }
+
+    }
+
+
+    function disabled() {
+        start.disabled = true;
+        outerplus.disabled = true;
+        outerminus.disabled = true;
+        innerplus.disabled = true;
+        innerminus.disabled = true;
+        dplus.disabled = true;
+        dminus.disabled = true;
+    }
+
+    start.addEventListener('click', loop);
+    start.addEventListener('click', disabled);
+    pause.addEventListener('click', function(e){window.cancelAnimationFrame(req)});
+    pause.addEventListener('click', function(e){start.disabled = false;});
+    pause.addEventListener('click', function(){start.innerHTML = "繼續";})
+    
+    //暫停
+    var clear = document.querySelector('#clear');    
+    clear.addEventListener('click', function(e){window.location.reload();});
+    </script>
+</body>
+</html>
