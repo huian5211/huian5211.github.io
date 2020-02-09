@@ -4,15 +4,17 @@
     overflow: hidden;
 }
 
+#down, #on {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 button {
     position: absolute;
     width: 200px;
 }
 
-#down, #on {
-    top: 0;
-    left: 0;
-}
 #start {
     top: 10px;
     left: 10px;
