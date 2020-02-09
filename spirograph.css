@@ -3,53 +3,49 @@
     padding: 0px;
     overflow: hidden;
 }
-#down, #on {
+
+button {
     position: absolute;
+    width: 100px;
+}
+
+#down, #on {
     top: 0;
     left: 0;
 }
 #start {
-    position: absolute;
     top: 10px;
     left: 10px;
 }
 #outerplus {
-    position: absolute;
     top: 40px;
     left: 10px;
 }
 #outerminus {
-    position: absolute;
     top: 70px;
     left: 10px;
 }
 #innerplus {
-    position: absolute;
     top: 100px;
     left: 10px;
 }
 #innerminus {
-    position: absolute;
     top: 130px;
     left: 10px;
 }
 #dplus {
-    position: absolute;
     top: 160px;
     left: 10px;
 }
 #dminus {
-    position: absolute;
     top: 190px;
     left: 10px;
 }
 #clear {
-    position: absolute;
     top: 220px;
     left: 10px;
 }
 #pause {
-    position: absolute;
     top: 250px;
     left: 10px;
 }
