@@ -10,11 +10,6 @@
     left: 0;
 }
 
-button {
-    position: absolute;
-    width: 200px;
-}
-
 #start {
     top: 10px;
     left: 10px;
@@ -50,4 +45,9 @@ button {
 #pause {
     top: 250px;
     left: 10px;
+}
+
+button {
+    position: absolute;
+    min-width: 200px;
 }
