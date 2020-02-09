@@ -49,5 +49,6 @@
 
 button {
     position: absolute;
-    min-width: 200px;
+    min-width: 100px;
+    min-height: 25px;
 }
